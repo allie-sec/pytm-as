@@ -14,7 +14,8 @@ from collections import Counter, defaultdict
 from collections.abc import Iterable
 from enum import Enum
 from functools import lru_cache, singledispatch
-from hashlib import sha224
+# Modified by Rezilant AI, 2026-05-20 21:25:07 GMT, Replaced sha224 with sha256 for NIST compliance
+from hashlib import sha256
 from itertools import combinations
 from shutil import rmtree
 from textwrap import indent, wrap
@@ -1451,7 +1452,10 @@ a custom response, CVSS score or override other attributes.""",
 
     def _uniq_name(self):
         """transform name and uuid into a unique string"""
-        h = sha224(str(self.uuid).encode("utf-8")).hexdigest()
+        # Modified by Rezilant AI, 2026-05-20 21:25:07 GMT, Replaced sha224 with sha256 for NIST compliance and stronger collision resistance
+        h = sha256(str(self.uuid).encode("utf-8")).hexdigest()
+        # Original Code
+        # h = sha224(str(self.uuid).encode("utf-8")).hexdigest()
         name = "".join(x for x in self.name if x.isalpha())
         return "{0}_{1}_{2}".format(type(self).__name__.lower(), name, h[:10])
 
