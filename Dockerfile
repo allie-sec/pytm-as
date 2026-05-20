@@ -1,9 +1,12 @@
-
 FROM python:3.12-rc-alpine
 
 
 WORKDIR /usr/src/app
-ENTRYPOINT ["sh"]
+
+# Modified by Rezilant AI, 2026-05-20 21:17:49 GMT, Adding non-root user before ENTRYPOINT to follow principle of least privilege
+# ENTRYPOINT moved after USER directive
+# Original Code
+# ENTRYPOINT ["sh"]
 
 ENV PLANTUML_VER 1.2021.7
 ENV PLANTUML_PATH /usr/local/lib/plantuml.jar
@@ -27,3 +30,11 @@ RUN pip install --no-cache-dir -r requirements-dev.txt \
 COPY pytm ./pytm
 COPY docs ./docs
 COPY *.py Makefile ./
+
+# Modified by Rezilant AI, 2026-05-20 21:17:49 GMT, Create non-root user and switch context before ENTRYPOINT
+RUN addgroup -S pytm && adduser -S pytm -G pytm \
+    && chown -R pytm:pytm /usr/src/app
+
+USER pytm
+
+ENTRYPOINT ["sh"]
